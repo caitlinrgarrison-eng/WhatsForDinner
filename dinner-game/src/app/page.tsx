@@ -344,11 +344,13 @@ export default function Home() {
     window.setTimeout(() => setFiltersOpen(false), 300);
   };
 
-  const pickSurpriseMode = () => {
+  const surpriseMeAndDecide = () => {
+    if (isDeciding) return;
     const card = pickUniformRandomFrom(MODE_CARDS);
     setMode(card.mode);
     setSurprisePulseMode(card.mode);
     window.setTimeout(() => setSurprisePulseMode(null), 520);
+    void runDecision(card.mode);
   };
 
   const commitLocation = () => {
@@ -679,8 +681,8 @@ export default function Home() {
           ) : null}
         </div>
 
-        <div className="hero-decision-flow">
-          <header className="hero-action-zone mb-5 text-center sm:mb-5">
+        <div className="hero-decision-flow flex flex-col">
+          <header className="hero-action-zone order-1 mb-4 text-center sm:mb-5">
             <h1 className="font-display text-[2.125rem] leading-[1.15] tracking-tight text-[var(--text)] sm:text-6xl sm:leading-none">
               Let&apos;s end dinner chaos.
             </h1>
@@ -689,22 +691,24 @@ export default function Home() {
             </p>
           </header>
 
-          <section className="vibe-mode-panel mb-5 rounded-[1.45rem] border border-[color-mix(in_srgb,var(--border)_48%,white)] bg-[color-mix(in_srgb,var(--surface-card)_97%,white)] px-5 py-6 shadow-[0_8px_32px_rgba(17,24,39,0.032)] sm:mb-6 sm:px-7 sm:py-7">
+          <section className="vibe-mode-panel order-3 mb-5 rounded-[1.45rem] border border-[color-mix(in_srgb,var(--border)_48%,white)] bg-[color-mix(in_srgb,var(--surface-card)_97%,white)] px-5 py-6 shadow-[0_8px_32px_rgba(17,24,39,0.032)] sm:order-2 sm:mb-6 sm:px-7 sm:py-7">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
               <div className="min-w-0 text-center sm:text-left">
                 <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--primary-to)_55%,var(--text-muted))]">
-                  Pick your vibe
+                  <span className="sm:hidden">Want more control? </span>Pick your vibe
                 </p>
                 <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-[var(--text-muted)] sm:mx-0 sm:mt-1.5 sm:max-w-[20rem] sm:text-[0.8125rem]">
-                  Choose a vibe, or skip it. We&apos;ll decide.
+                  <span className="sm:hidden">Fine-tune mood, filters, or how you eat — or leave it as-is.</span>
+                  <span className="hidden sm:inline">Choose a vibe, or skip it. We&apos;ll decide.</span>
                 </p>
               </div>
               <div className="hidden shrink-0 flex-wrap items-start justify-end gap-x-2.5 gap-y-2.5 sm:flex">
                 <div className="flex flex-col items-start gap-0.5">
                   <button
                     type="button"
-                    onClick={pickSurpriseMode}
-                    className="surprise-chip surprise-chip--lead group inline-flex items-center gap-1.5 rounded-full border border-[color-mix(in_srgb,var(--primary-to)_34%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_10%,white)] px-3.5 py-1.5 text-[11px] font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_88%,var(--text))] shadow-[0_2px_10px_color-mix(in_srgb,var(--primary-to)_14%,transparent)] transition hover:border-[color-mix(in_srgb,var(--primary-to)_48%,var(--border))] hover:bg-[color-mix(in_srgb,var(--primary-to)_14%,white)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2"
+                    onClick={surpriseMeAndDecide}
+                    disabled={isDeciding}
+                    className="surprise-chip surprise-chip--lead group inline-flex items-center gap-1.5 rounded-full border border-[color-mix(in_srgb,var(--primary-to)_34%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_10%,white)] px-3.5 py-1.5 text-[11px] font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_88%,var(--text))] shadow-[0_2px_10px_color-mix(in_srgb,var(--primary-to)_14%,transparent)] transition hover:border-[color-mix(in_srgb,var(--primary-to)_48%,var(--border))] hover:bg-[color-mix(in_srgb,var(--primary-to)_14%,white)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-55"
                   >
                     <span aria-hidden className="surprise-chip__spark text-[0.85rem] transition-transform duration-300 ease-out group-hover:-rotate-12 group-hover:scale-110">
                       ✦
@@ -712,7 +716,7 @@ export default function Home() {
                     Surprise me
                   </button>
                   <span className="pl-1 text-[10px] font-medium leading-tight text-[color-mix(in_srgb,var(--label-muted)_88%,transparent)]">
-                    Skip the thinking
+                    Vibe + dinner in one tap
                   </span>
                 </div>
                 <button
@@ -742,8 +746,9 @@ export default function Home() {
             <div className="mt-5 flex flex-col gap-3 sm:hidden">
               <button
                 type="button"
-                onClick={pickSurpriseMode}
-                className="surprise-chip surprise-chip--lead group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--primary-to)_34%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_10%,white)] px-4 py-3 text-xs font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_88%,var(--text))] shadow-[0_2px_10px_color-mix(in_srgb,var(--primary-to)_14%,transparent)] transition active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2"
+                onClick={surpriseMeAndDecide}
+                disabled={isDeciding}
+                className="surprise-chip surprise-chip--lead group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--primary-to)_34%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_10%,white)] px-4 py-3 text-xs font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_88%,var(--text))] shadow-[0_2px_10px_color-mix(in_srgb,var(--primary-to)_14%,transparent)] transition active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-55"
               >
                 <span aria-hidden className="text-[0.95rem] transition-transform duration-300 ease-out group-hover:-rotate-12 group-hover:scale-110">
                   ✦
@@ -751,7 +756,7 @@ export default function Home() {
                 Surprise me
               </button>
               <p className="text-center text-[10px] font-medium leading-snug text-[color-mix(in_srgb,var(--label-muted)_90%,transparent)]">
-                Skip the thinking — we&apos;ll pick the mode.
+                One tap: random vibe, then tonight&apos;s pick.
               </p>
               <button
                 type="button"
@@ -810,9 +815,9 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="hero-vibe-bridge mx-auto mb-3 max-w-3xl" aria-hidden />
+          <div className="hero-vibe-bridge order-4 mx-auto mb-3 hidden max-w-3xl sm:order-3 sm:mb-3 sm:block" aria-hidden />
 
-          <div className="hero-cta-wrap mx-auto mb-10 max-w-3xl text-center">
+          <div className="hero-cta-wrap order-2 mx-auto mb-6 max-w-3xl text-center sm:order-4 sm:mb-10">
           <div className="relative mx-auto w-full max-w-md px-0 sm:px-0">
             <span
               className={[
