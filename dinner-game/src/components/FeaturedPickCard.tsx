@@ -495,7 +495,11 @@ export function FeaturedPickCard({
           >
             {ctaLabel}
           </motion.a>
-          <div className="grid grid-cols-3 gap-1.5 text-center sm:gap-2" role="group" aria-label="More actions">
+          <div
+            className="flex flex-col gap-2 text-center sm:grid sm:grid-cols-3 sm:gap-2"
+            role="group"
+            aria-label="More actions"
+          >
             <motion.button
               type="button"
               disabled={!canSpinAgain}

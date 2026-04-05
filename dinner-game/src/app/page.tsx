@@ -560,109 +560,117 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen text-[var(--text-muted)]">
-      <main className="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-8 sm:pt-10">
-        <div className="mb-8">
-          <div className="flex flex-wrap items-start gap-2.5 rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--surface-card)_92%,white)] px-3 py-2 shadow-[0_10px_30px_rgba(17,24,39,0.04)] sm:px-4">
-          <form
-            className="flex min-w-0 flex-1 flex-wrap items-start gap-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              commitLocation();
-            }}
-          >
-            <div className="w-full min-w-[220px] flex-1">
-              <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-                <button
-                  type="button"
-                  onClick={() => void detectLocation()}
-                  aria-label="Use my location"
-                  title="Use my location"
-                  className="btn-ghost inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full p-0 text-[var(--text)]"
-                >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    className="h-[1.05rem] w-[1.05rem]"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 21s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z" />
-                    <circle cx="12" cy="10" r="2.5" />
-                  </svg>
-                </button>
-                <div className="relative min-w-0 flex-1">
-                  <input
-                    value={location}
-                    onFocus={() => setShowSuggestions(true)}
-                    onBlur={() => {
-                      window.setTimeout(() => setShowSuggestions(false), 120);
-                    }}
-                    onChange={(e) => {
-                      setLocation(e.target.value);
-                      setIsAutoLocation(false);
-                      setIsLocationLocked(false);
-                    }}
-                    placeholder="City, state or ZIP"
-                    className="h-10 w-full rounded-full border border-transparent bg-[color-mix(in_srgb,var(--surface-muted)_80%,white)] px-4 pr-11 text-sm text-[var(--text)] focus:border-[var(--ring)] focus:outline-none"
-                  />
-                  <button
-                    type="submit"
-                    aria-label="Save location"
-                    className="btn-ghost absolute right-1 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full p-0 text-sm leading-none"
-                    style={
-                      isLocationLocked
-                        ? {
-                            color: "var(--select)",
-                            borderColor: "color-mix(in srgb, var(--select) 38%, var(--border))",
-                            background: "color-mix(in srgb, var(--select) 10%, #ffffff)",
-                          }
-                        : undefined
-                    }
-                  >
-                    ✓
-                  </button>
-                  {showSuggestions && (locationSuggestions.length > 0 || isSuggesting) ? (
-                  <div className="absolute left-0 right-0 top-[calc(100%+0.4rem)] z-20 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-card)] shadow-[var(--shadow-soft)]">
-                    {isSuggesting && !locationSuggestions.length ? (
-                      <p className="px-3.5 py-2 text-xs text-[var(--label-muted)]">Finding places...</p>
-                    ) : (
-                      <ul className="py-1">
-                        {locationSuggestions.map((suggestion) => (
-                          <li key={suggestion}>
-                            <button
-                              type="button"
-                              className="w-full px-3.5 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--surface-muted)]"
-                              onClick={() => {
-                                setLocation(suggestion);
-                                setIsAutoLocation(false);
-                                setIsLocationLocked(true);
-                                setShowSuggestions(false);
-                                setStatus("Location secured and ready.");
-                              }}
-                            >
-                              {suggestion}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                ) : null}
-                </div>
-              </div>
-              {!isLocationLocked ? <p className="mt-1.5 px-1 text-[11px] text-[var(--label-muted)]">Set a location to get nearby restaurant picks.</p> : null}
-            </div>
-            <button
-              type="button"
-              className="inline-flex h-10 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--primary-to)_36%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_11%,white)] px-4 text-xs font-semibold text-[var(--text)] shadow-[0_1px_5px_color-mix(in_srgb,var(--primary-to)_12%,transparent)] transition hover:bg-[color-mix(in_srgb,var(--primary-to)_16%,white)]"
+    <div className="min-h-screen min-h-[100dvh] overflow-x-clip text-[var(--text-muted)]">
+      <main className="mx-auto max-w-6xl pb-[max(7.5rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(2rem,env(safe-area-inset-top))] sm:pb-24 sm:pl-[max(2rem,env(safe-area-inset-left))] sm:pr-[max(2rem,env(safe-area-inset-right))] sm:pt-10">
+        <div className="mb-7 sm:mb-8">
+          <div className="flex flex-col gap-3 rounded-2xl border border-[color-mix(in_srgb,var(--border)_85%,transparent)] bg-[color-mix(in_srgb,var(--surface-card)_96%,white)] px-4 py-3.5 shadow-[0_8px_28px_rgba(17,24,39,0.045)] sm:flex-row sm:items-center sm:gap-3 sm:rounded-full sm:px-3 sm:py-2.5 sm:pl-3.5 sm:pr-2.5">
+            <form
+              className="min-w-0 flex-1"
+              onSubmit={(e) => {
+                e.preventDefault();
+                commitLocation();
+              }}
             >
-              Log in / Sign up
-            </button>
-          </form>
+              <div className="min-w-0 space-y-2 sm:space-y-1.5">
+                <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void detectLocation()}
+                    aria-label="Use my location"
+                    title="Use my location"
+                    className="btn-ghost inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--border)_70%,transparent)] bg-[color-mix(in_srgb,var(--surface-muted)_45%,white)] p-0 text-[var(--text)] shadow-[0_1px_2px_rgba(17,24,39,0.04)]"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      className="h-[1.05rem] w-[1.05rem]"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.9"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 21s7-5.8 7-11a7 7 0 1 0-14 0c0 5.2 7 11 7 11Z" />
+                      <circle cx="12" cy="10" r="2.5" />
+                    </svg>
+                  </button>
+                  <div className="relative min-w-0 flex-1">
+                    <input
+                      value={location}
+                      onFocus={() => setShowSuggestions(true)}
+                      onBlur={() => {
+                        window.setTimeout(() => setShowSuggestions(false), 120);
+                      }}
+                      onChange={(e) => {
+                        setLocation(e.target.value);
+                        setIsAutoLocation(false);
+                        setIsLocationLocked(false);
+                      }}
+                      placeholder="City, state or ZIP"
+                      className="h-10 w-full rounded-xl border border-[color-mix(in_srgb,var(--border)_55%,transparent)] bg-[color-mix(in_srgb,var(--surface-muted)_72%,white)] px-3.5 pr-11 text-sm text-[var(--text)] shadow-[inset_0_1px_2px_rgba(17,24,39,0.04)] placeholder:text-[color-mix(in_srgb,var(--text-muted)_75%,transparent)] focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[color-mix(in_srgb,var(--ring)_35%,transparent)] sm:rounded-full"
+                    />
+                    <button
+                      type="submit"
+                      aria-label="Save location"
+                      className="btn-ghost absolute right-1 top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full p-0 text-sm leading-none"
+                      style={
+                        isLocationLocked
+                          ? {
+                              color: "var(--select)",
+                              borderColor: "color-mix(in srgb, var(--select) 38%, var(--border))",
+                              background: "color-mix(in srgb, var(--select) 10%, #ffffff)",
+                            }
+                          : undefined
+                      }
+                    >
+                      ✓
+                    </button>
+                    {showSuggestions && (locationSuggestions.length > 0 || isSuggesting) ? (
+                      <div className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-20 max-h-[min(16rem,45vh)] overflow-y-auto overflow-x-hidden rounded-xl border border-[var(--border)] bg-[var(--surface-card)] shadow-[var(--shadow-soft)]">
+                        {isSuggesting && !locationSuggestions.length ? (
+                          <p className="px-3.5 py-2 text-xs text-[var(--label-muted)]">Finding places...</p>
+                        ) : (
+                          <ul className="py-1">
+                            {locationSuggestions.map((suggestion) => (
+                              <li key={suggestion}>
+                                <button
+                                  type="button"
+                                  className="w-full px-3.5 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--surface-muted)]"
+                                  onClick={() => {
+                                    setLocation(suggestion);
+                                    setIsAutoLocation(false);
+                                    setIsLocationLocked(true);
+                                    setShowSuggestions(false);
+                                    setStatus("Location secured and ready.");
+                                  }}
+                                >
+                                  {suggestion}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFiltersOpen(true)}
+                    className="btn-ghost inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--border)_70%,transparent)] bg-[color-mix(in_srgb,var(--surface-muted)_45%,white)] p-0 text-[var(--text)] shadow-[0_1px_2px_rgba(17,24,39,0.04)] lg:hidden"
+                    aria-label="Open menu, filters, and account"
+                  >
+                    <svg aria-hidden className="h-[1.15rem] w-[1.15rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M4 7h16M4 12h16M4 17h16" />
+                    </svg>
+                  </button>
+                </div>
+                {!isLocationLocked ? (
+                  <p className="text-center text-[11px] leading-relaxed text-[var(--label-muted)] text-balance sm:pl-12 sm:text-left">
+                    Set a location to get nearby restaurant picks.
+                  </p>
+                ) : null}
+              </div>
+            </form>
           </div>
           {!isDeciding && status ? (
             <p className="mt-2.5 px-1 text-xs text-[var(--text-muted)]" role="status" aria-live="polite">
@@ -672,26 +680,26 @@ export default function Home() {
         </div>
 
         <div className="hero-decision-flow">
-          <header className="hero-action-zone mb-4 text-center sm:mb-5">
-            <h1 className="font-display text-4xl tracking-tight text-[var(--text)] sm:text-6xl">
+          <header className="hero-action-zone mb-5 text-center sm:mb-5">
+            <h1 className="font-display text-[2.125rem] leading-[1.15] tracking-tight text-[var(--text)] sm:text-6xl sm:leading-none">
               Let&apos;s end dinner chaos.
             </h1>
-            <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-snug text-[var(--text-muted)] sm:mt-2.5">
+            <p className="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-[var(--text-muted)] sm:mt-2.5 sm:leading-snug">
               You pick the vibe. We do the hard part.
             </p>
           </header>
 
           <section className="vibe-mode-panel mb-5 rounded-[1.45rem] border border-[color-mix(in_srgb,var(--border)_48%,white)] bg-[color-mix(in_srgb,var(--surface-card)_97%,white)] px-5 py-6 shadow-[0_8px_32px_rgba(17,24,39,0.032)] sm:mb-6 sm:px-7 sm:py-7">
-            <div className="flex flex-col gap-3.5 sm:flex-row sm:items-start sm:justify-between sm:gap-5">
-              <div className="min-w-0 text-left">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <div className="min-w-0 text-center sm:text-left">
                 <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[color-mix(in_srgb,var(--primary-to)_55%,var(--text-muted))]">
                   Pick your vibe
                 </p>
-                <p className="mt-1.5 text-xs leading-relaxed text-[var(--text-muted)] sm:text-[0.8125rem]">
+                <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-[var(--text-muted)] sm:mx-0 sm:mt-1.5 sm:max-w-[20rem] sm:text-[0.8125rem]">
                   Choose a vibe, or skip it. We&apos;ll decide.
                 </p>
               </div>
-              <div className="flex shrink-0 flex-wrap items-start justify-start gap-2.5 sm:justify-end">
+              <div className="hidden shrink-0 flex-wrap items-start justify-end gap-x-2.5 gap-y-2.5 sm:flex">
                 <div className="flex flex-col items-start gap-0.5">
                   <button
                     type="button"
@@ -730,10 +738,47 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <p className="mt-3.5 text-[11px] leading-snug text-[color-mix(in_srgb,var(--label-muted)_88%,transparent)]">
+
+            <div className="mt-5 flex flex-col gap-3 sm:hidden">
+              <button
+                type="button"
+                onClick={pickSurpriseMode}
+                className="surprise-chip surprise-chip--lead group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--primary-to)_34%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_10%,white)] px-4 py-3 text-xs font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_88%,var(--text))] shadow-[0_2px_10px_color-mix(in_srgb,var(--primary-to)_14%,transparent)] transition active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2"
+              >
+                <span aria-hidden className="text-[0.95rem] transition-transform duration-300 ease-out group-hover:-rotate-12 group-hover:scale-110">
+                  ✦
+                </span>
+                Surprise me
+              </button>
+              <p className="text-center text-[10px] font-medium leading-snug text-[color-mix(in_srgb,var(--label-muted)_90%,transparent)]">
+                Skip the thinking — we&apos;ll pick the mode.
+              </p>
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                className="surprise-chip inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[color-mix(in_srgb,var(--primary-to)_24%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_6%,white)] px-4 py-3 text-xs font-semibold tracking-wide text-[color-mix(in_srgb,var(--primary-to)_82%,var(--text))] shadow-[0_1px_4px_color-mix(in_srgb,var(--primary-to)_8%,transparent)] transition active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--primary-to)_38%,transparent)] focus-visible:ring-offset-2"
+                aria-label="Open filters: cuisine, price, distance, dietary, and more"
+              >
+                <span className="inline-flex h-[0.9rem] w-[0.9rem] shrink-0 items-center justify-center text-[color-mix(in_srgb,var(--primary-to)_90%,var(--text))]" aria-hidden>
+                  <svg viewBox="0 0 24 24" className="h-full w-full" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="4" x2="4" y1="21" y2="14" />
+                    <line x1="4" x2="4" y1="10" y2="3" />
+                    <line x1="12" x2="12" y1="21" y2="12" />
+                    <line x1="12" x2="12" y1="8" y2="3" />
+                    <line x1="20" x2="20" y1="21" y2="16" />
+                    <line x1="20" x2="20" y1="12" y2="3" />
+                    <line x1="2" x2="6" y1="14" y2="14" />
+                    <line x1="10" x2="14" y1="8" y2="8" />
+                    <line x1="18" x2="22" y1="16" y2="16" />
+                  </svg>
+                </span>
+                Tune it
+              </button>
+            </div>
+            <p className="mt-4 hidden text-[11px] leading-snug text-[color-mix(in_srgb,var(--label-muted)_88%,transparent)] sm:mt-3.5 sm:block">
               Fine tune anytime — set preferences when you want more control.
             </p>
-            <div className="mt-5 grid grid-cols-2 gap-3 text-left sm:grid-cols-4 sm:gap-3.5">
+            <div className="mt-5 grid grid-cols-2 gap-4 text-left sm:mt-5 sm:grid-cols-4 sm:gap-3.5">
               {MODE_CARDS.map((card) => {
                 const active = mode === card.mode;
                 const pulsing = surprisePulseMode === card.mode;
@@ -744,7 +789,7 @@ export default function Home() {
                     onClick={() => setMode(card.mode)}
                     aria-pressed={active}
                     className={[
-                      "mode-vibe-card group rounded-[1rem] border px-3 py-3 text-left transition duration-200 will-change-transform sm:px-3.5 sm:py-3.5",
+                      "mode-vibe-card group rounded-[1rem] border px-3.5 py-3.5 text-left transition duration-200 will-change-transform sm:px-3.5 sm:py-3.5",
                       `mode-vibe-card--${card.mode}`,
                       active ? "mode-vibe-card--selected" : "",
                       pulsing ? "mode-vibe-card--pulse" : "",
@@ -756,7 +801,7 @@ export default function Home() {
                       </span>
                       {card.title}
                     </p>
-                    <p className="mt-1.5 text-[11px] leading-snug text-[var(--text-muted)] group-hover:text-[color-mix(in_srgb,var(--text-muted)_92%,var(--text))]">
+                    <p className="mt-2 text-[11px] leading-relaxed text-[var(--text-muted)] group-hover:text-[color-mix(in_srgb,var(--text-muted)_92%,var(--text))] sm:mt-1.5 sm:leading-snug">
                       {card.line}
                     </p>
                   </button>
@@ -768,7 +813,7 @@ export default function Home() {
           <div className="hero-vibe-bridge mx-auto mb-3 max-w-3xl" aria-hidden />
 
           <div className="hero-cta-wrap mx-auto mb-10 max-w-3xl text-center">
-          <div className="relative mx-auto inline-block">
+          <div className="relative mx-auto w-full max-w-md px-0 sm:px-0">
             <span
               className={[
                 "decide-cta__pulse-ring pointer-events-none absolute inset-[-6px] z-0 rounded-full",
@@ -781,8 +826,8 @@ export default function Home() {
               onClick={() => void runDecision()}
               disabled={isDeciding}
               className={[
-                "btn-primary-gradient decide-cta relative z-[1] inline-flex items-center justify-center rounded-full px-10 py-[1.05rem] text-lg font-bold",
-                "min-h-[3.95rem] min-w-[clamp(240px,56vw,320px)]",
+                "btn-primary-gradient decide-cta relative z-[1] inline-flex w-full max-w-full items-center justify-center rounded-full px-5 py-[1.05rem] text-lg font-bold sm:px-10",
+                "min-h-[3.95rem]",
                 isDeciding ? "decide-button--loading pointer-events-none" : "",
                 mode && !isDeciding ? "decide-cta--vibe-ready" : "",
               ].join(" ")}
@@ -955,11 +1000,21 @@ export default function Home() {
               drawerVisible ? "filter-drawer-sheet--open" : "",
             ].join(" ")}
           >
-            <div className="flex h-full min-h-0 flex-col overflow-y-auto bg-[var(--surface-card)] px-5 pb-6 pt-5 sm:px-6">
+            <div className="flex h-full min-h-0 flex-col overflow-y-auto bg-[var(--surface-card)] px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pb-6">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h3 className="font-display text-lg text-[var(--text)]">Tune it</h3>
                 <button type="button" onClick={closeFilters} className="btn-ghost rounded-full px-3 py-1.5 text-xs">
                   Close
+                </button>
+              </div>
+
+              <div className="mb-5">
+                <p className="mb-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[var(--label-muted)]">Account</p>
+                <button
+                  type="button"
+                  className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[color-mix(in_srgb,var(--primary-to)_28%,var(--border))] bg-[color-mix(in_srgb,var(--primary-to)_9%,white)] px-4 text-sm font-semibold text-[var(--text)] shadow-[0_1px_2px_rgba(17,24,39,0.04)] transition hover:bg-[color-mix(in_srgb,var(--primary-to)_12%,white)]"
+                >
+                  Log in / Sign up
                 </button>
               </div>
 
