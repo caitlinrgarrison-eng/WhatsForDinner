@@ -2024,7 +2024,9 @@ body::after {
 
 .food-ticker-shell {
   --ticker-gap: 0.55rem;
-  --ticker-item-width: clamp(6.4rem, 18vw, 8rem);
+  --ticker-item-width: clamp(5rem, 16vw, 8rem);
+  box-sizing: border-box;
+  max-width: 100%;
   overflow: hidden;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
